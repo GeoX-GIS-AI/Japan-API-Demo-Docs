@@ -35,7 +35,7 @@ Postman is downloadable for free use from here and supported with lots of develo
 
 After downloading Postman follow the instructions below to get started.
 
-=> Location API with GET method
+=> Steps to hit API in Postman
 1. Create a new request.
 2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai.com/api/v1/japan/parcels
 3. Select the GET HTTP method
@@ -58,7 +58,7 @@ from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 def request_single_location(access_key, secret_key, address, prefecture) -> dict:
     """
-    This function will hit the API with location and return the response.
+    This function will hit the API with location(address and prefecture) and return the response.
     :param access_key: AWS Access Key
     :param secret_key: AWS Secret Key
     :param address: address of the location
@@ -89,7 +89,7 @@ def request_single_location(access_key, secret_key, address, prefecture) -> dict
 
 
 if __name__ == '__main__':
-    # Calling location API with address/prefecture
+    # Calling the API with address/prefecture
     m2m_response = request_single_location("YOUR_API_KEY", "YOUR_API_SECRET",
                                address="府大阪市西区九条南１丁目１２－２１", prefecture="大阪")
     print(json.dumps(m2m_response, indent=2))
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 ## Access API with cURL
 The API request needs to be signed with AWS Signature Version 4. Please follow this [link](https://docs.aws.amazon.com/general/addressest/gr/sigv4-signed-request-examples.html) for more details.
 
-=> Location API with GET method
+=> Example call of API with cURL
 ```
 curl --location --request GET 'https://api.geox-ai.com/api/v1/japan/parcels?address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 ' \
 --header 'X-Amz-Date: 20230317T135952Z' \
@@ -107,7 +107,7 @@ curl --location --request GET 'https://api.geox-ai.com/api/v1/japan/parcels?addr
 ```
 
 ## Access API with wget
-=> Location API with GET method
+=> Example call of API with wget
 ```shell
 wget --no-check-certificate --quiet \
   --method GET \
@@ -125,14 +125,12 @@ Here are the sample request and response
 https://api.geox-ai.com/api/v1/japan/parcels
 ```
 
-## Request Query params Sample (Location API)
-=> With address/prefecture
+## Request Query params Sample
 ```shell
 address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 
 ```
 
 ## Response Sample
-=> Location API
 ```json
 {
     "data": [
