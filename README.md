@@ -103,7 +103,7 @@ The API request needs to be signed with AWS Signature Version 4. Please follow t
 ```
 curl --location --request GET 'https://api.geox-ai.com/api/v1/japan/parcels?address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 ' \
 --header 'X-Amz-Date: 20230317T135952Z' \
---header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFGWE6TFCSUHL/20230317/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=d226e391f7926dab7c36709bf12c967dff8fb9d1a62d6fdc95ec1c1b9e58364d'
+--header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIAXXXXXXXXXXXXXXXX/20230317/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=XXXXXXXXXXXXXXXXXXXX6dab7c36709bf12c967dff8fb9d1a62XXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
 
 ## Access API with wget
@@ -113,7 +113,7 @@ wget --no-check-certificate --quiet \
   --method GET \
   --timeout=0 \
   --header 'X-Amz-Date: 20230317T135952Z' \
-  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFGWE6TFCSUHL/20230317/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=d226e391f7926dab7c36709bf12c967dff8fb9d1a62d6fdc95ec1c1b9e58364d' \
+  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIAXXXXXXXXXXXXXXXX/20230317/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=XXXXXXXXXXXXXXXXXXXX6dab7c36709bf12c967dff8fb9d1a62XXXXXXXXXXXXXXXXXXXXXXXXX' \
    'https://api.geox-ai.com/api/v1/japan/parcels?address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 '
 ```
 
