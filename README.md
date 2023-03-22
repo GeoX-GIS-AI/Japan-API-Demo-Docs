@@ -35,13 +35,13 @@ Postman is downloadable for free use from here and supported with lots of develo
 
 After downloading Postman follow the instructions below to get started.
 
-=> Steps to hit API in Postman
+=> Steps to execute API in Postman
 1. Create a new request.
 2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai.com/api/v1/japan/parcels
 3. Select the GET HTTP method
 4. Setup authorization as mentioned above.
-5. Now put your address and prefecture in the Params section with `address` (ex-府大阪市西区九条南１丁目１２－２１) and `prefecture` (ex-大阪) keys.
-6. Finally, hit the API.
+5. Now put your address and prefecture in the Params section with `address` (府大阪市西区九条南１丁目１２－２１) and `prefecture` (大阪) keys. Once updated your Request URL field should look like `https://api.geox-ai.com/api/v1/japan/parcels?prefecture=大阪&address=府大阪市西区九条南１丁目１２-２１`
+6. Finally, execute the API.
 
 => Sample Postman request
 [![Postman request](japan_api_example.png)](japan_api_example.png)
@@ -60,7 +60,7 @@ from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 def request_single_location(access_key, secret_key, address, prefecture) -> dict:
     """
-    This function will hit the API with location(address and prefecture) and return the response.
+    This function will execute the API with location(address and prefecture) and return the response.
     :param access_key: AWS Access Key
     :param secret_key: AWS Secret Key
     :param address: address of the location
