@@ -40,9 +40,11 @@ After downloading Postman follow the instructions below to get started.
 2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai.com/api/v1/japan/parcels
 3. Select the GET HTTP method
 4. Setup authorization as mentioned above.
-5. Now put your address and prefecture in the Params section with `address` and `prefecture` keys.
+5. Now put your address and prefecture in the Params section with `address` (ex-府大阪市西区九条南１丁目１２－２１) and `prefecture` (ex-大阪) keys.
 6. Finally, hit the API.
 
+=> Sample Postman request
+[![Postman request](japan_api_example.png)](japan_api_example.png)
 
 ## Access API with Python
 1. We will need following libraries to be installed
