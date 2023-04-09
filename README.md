@@ -35,23 +35,30 @@ Postman is downloadable for free use from here and supported with lots of develo
 
 After downloading Postman follow the instructions below to get started.
 
-=> Steps to execute API in Postman
+=> Single Location API with GET method
 1. Create a new request.
 2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai.com/api/v1/japan/parcels
 3. Select the GET HTTP method
 4. Setup authorization as mentioned above.
-5. Now put your address and prefecture in the Params section with `address` (府大阪市西区九条南１丁目１２－２１) and `prefecture` (大阪) keys. Once updated your Request URL field should look like `https://api.geox-ai.com/api/v1/japan/parcels?prefecture=大阪&address=府大阪市西区九条南１丁目１２-２１`
+5. Now put your address and prefecture in the Params section with `address` (松原市天美東５丁目４−３３) and `prefecture` (大阪府) keys. Once updated your Request URL field should look like `https://api.geox-ai.com/api/v1/japan/parcels?prefecture=大阪&address=府大阪市西区九条南１丁目１２-２１`
 6. Finally, execute the API.
 
-=> Sample Postman request
-[![Postman request](japan_api_example.png)](japan_api_example.png)
+=> Batch Location API with POST method
+1. Create a new request.
+2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai.com/api/v1/japan/parcels
+3. Select the POST HTTP method
+4. Setup authorization as mentioned above.
+5. Now go to the Body section, select the raw radio button and select JSON from the dropdown.
+6. Now put your address and prefecture in the Body section with `address` (松原市天美東５丁目４−３３) and `prefecture` (大阪府) keys along with `correlationId` key.
+7. You can add multiple locations in the body section.
+8. Finally, hit the API.
 
 ## Access API with Python
 1. We will need following libraries to be installed
    - requests
    - aws_requests_auth
 
-### Python code
+### Python code for both single and batch requests
 ```python
 import json
 import requests
@@ -87,36 +94,114 @@ def request_single_location(access_key, secret_key, address, prefecture) -> dict
     res_data = res.json()
     return res_data
 
-
+def m2m_locations_batch(access_key, secret_key, locations):
+    api_url = "https://api.geox-ai.com/api/v1/japan/parcels"
+    aws_details = {
+        'aws_access_key': access_key,
+        'aws_secret_access_key': secret_key,
+        'aws_host': "api.geox-ai.com",
+        'aws_region': "us-east-1",
+        'aws_service': "execute-api"
+    }
+    auth = AWSRequestsAuth(**aws_details)
+    request_body = {
+        "locations": locations
+    }
+    res = requests.post(api_url, auth=auth, json=request_body)
+    assert res.status_code == 200, f"Request failed with status: {res.status_code}"
+    res_data = res.json()
+    return res_data
 
 
 if __name__ == '__main__':
-    # Calling the API with address/prefecture
+    # Calling single location API with address/prefecture
     m2m_response = request_single_location("YOUR_API_KEY", "YOUR_API_SECRET",
-                               address="府大阪市西区九条南１丁目１２－２１", prefecture="大阪")
-    print(json.dumps(m2m_response, indent=2))
+                               address="松原市天美東５丁目４−３３", prefecture="大阪府")
 
+    # Calling batch location API
+    locations = [ # Each location object should contain address and prefecture along with correlationId
+        {
+            "address": "松原市天美東５丁目４−３３",
+            "prefecture": "大阪府",
+            "correlationId": "123"
+        },
+        {
+            "address": "大阪市中央区谷町２丁目５−４",
+            "prefecture": "大阪府",
+            "correlationId": "789"
+        }
+    ]
+    m2m_response = m2m_locations_batch(access_key, secret_key, locations)
 ```
 
 ## Access API with cURL
 The API request needs to be signed with AWS Signature Version 4. Please follow this [link](https://docs.aws.amazon.com/general/addressest/gr/sigv4-signed-request-examples.html) for more details.
 
-=> Example call of API with cURL
+=> Single Location API with GET method
+```shell
+curl --location --request GET 'https://api.geox-ai.com/api/v1/japan/parcels?address=大阪市中央区谷町２丁目５−４&prefecture=大阪府' \
+--header 'X-Amz-Date: 20230409T093209Z' \
+--header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXXXXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90bXXXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
-curl --location --request GET 'https://api.geox-ai.com/api/v1/japan/parcels?address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 ' \
---header 'X-Amz-Date: 20230317T135952Z' \
---header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIAXXXXXXXXXXXXXXXX/20230317/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=XXXXXXXXXXXXXXXXXXXX6dab7c36709bf12c967dff8fb9d1a62XXXXXXXXXXXXXXXXXXXXXXXXX'
+
+=> Batch Location API with POST method
+```shell
+curl --location --request POST 'https://api.geox-ai.com/api/v1/japan/parcels' \
+--header 'X-Amz-Content-Sha256: beaead3198f7da1e70d03ab969765e0821b24fc913697e929e726aeaebf0eba3' \
+--header 'X-Amz-Date: 20230409T094608Z' \
+--header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc33192f8d7c9802b2e0df49XXXXXXXXXXXX' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "locations": [
+        {
+            "address": "松原市天美東５丁目４−３３",
+            "prefecture": "大阪府",
+            "correlationId": "123"
+        },
+        {
+            "address": "大阪市中央区谷町２丁目５−４",
+            "prefecture": "大阪府",
+            "correlationId": "789"
+        }
+    ]
+}'
 ```
 
 ## Access API with wget
-=> Example call of API with wget
+=> Single Location API with GET method
 ```shell
 wget --no-check-certificate --quiet \
   --method GET \
   --timeout=0 \
-  --header 'X-Amz-Date: 20230317T135952Z' \
-  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIAXXXXXXXXXXXXXXXX/20230317/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=XXXXXXXXXXXXXXXXXXXX6dab7c36709bf12c967dff8fb9d1a62XXXXXXXXXXXXXXXXXXXXXXXXX' \
-   'https://api.geox-ai.com/api/v1/japan/parcels?address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 '
+  --header 'X-Amz-Date: 20230409T093209Z' \
+  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TIXXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90XXX' \
+   'https://api.geox-ai.com/api/v1/japan/parcels?address=大阪市中央区谷町２丁目５−４&prefecture=大阪府'
+```
+
+=> Batch Location API with POST method
+```shell
+wget --no-check-certificate --quiet \
+  --method POST \
+  --timeout=0 \
+  --header 'X-Amz-Content-Sha256: beaead3198f7da1e70d03ab969765e0821b24fc913697e929e726aeaebf0eba3' \
+  --header 'X-Amz-Date: 20230409T094608Z' \
+  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2XXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc331XXX' \
+  --header 'Content-Type: application/json' \
+  --body-data '{
+    "locations": [
+        {
+            "address": "松原市天美東５丁目４−３３",
+            "prefecture": "大阪府",
+            "correlationId": "123"
+        },
+        {
+            "address": "大阪市中央区谷町２丁目５−４",
+            "prefecture": "大阪府",
+            "correlationId": "789"
+        }
+    ]
+}' \
+   'https://api.geox-ai.com/api/v1/japan/parcels'
 ```
 
 # Request and Response Samples
@@ -129,64 +214,221 @@ https://api.geox-ai.com/api/v1/japan/parcels
 
 ## Request Query params Sample
 ```shell
-address=府大阪市西区九条南１丁目１２－２１&prefecture=大阪 
+address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
+```
+## Request Body Sample (Batch Location API)
+```json
+{
+    "locations": [
+        {
+            "address": "松原市天美東５丁目４−３３",
+            "prefecture": "大阪府",
+            "correlationId": "123"
+        },
+        {
+            "address": "大阪市中央区谷町２丁目５−４",
+            "prefecture": "大阪府",
+            "correlationId": "789"
+        }
+    ]
+}
 ```
 
 ## Response Sample
+
+=> Single Loation API
+```json
+{
+    "confidence": 0.95,
+    "data": [
+        {
+            "addr": "大阪市中央区谷町２丁目５−４",
+            "air_conditioner_area": 0.0,
+            "air_conditioner_count": 27,
+            "building_footprint_id": 23,
+            "building_ground_height": 15,
+            "building_height": "36",
+            "centroid_lat": 34.6855071,
+            "centroid_long": 135.5169481,
+            "dis_closest_building": 0.85,
+            "dis_closest_tree": 6.65,
+            "dis_coast": 63.24,
+            "dis_fire_station": 0.34,
+            "dis_road": 7.86,
+            "dis_vegetation": 4.21,
+            "dis_water_reservoir": 12.5,
+            "flat_area": 457.0,
+            "floors_number": "10",
+            "footprint_area": 457.0,
+            "prefecture": "大阪府",
+            "roof_condition": "Fair",
+            "roof_material": "Concrete ",
+            "roof_type": "Flat",
+            "solar_panel_area": "0",
+            "sports_fields_area": "False",
+            "tree_height": 6,
+            "tree_overhang": "False"
+        },
+        {
+            "addr": "大阪市中央区糸屋町１丁目１−１",
+            "air_conditioner_area": 0.0,
+            "air_conditioner_count": 2,
+            "building_footprint_id": 23,
+            "building_ground_height": 15,
+            "building_height": "18",
+            "centroid_lat": 34.6855604972551,
+            "centroid_long": 135.516783499364,
+            "dis_closest_building": 0.85,
+            "dis_closest_tree": 15.23,
+            "dis_coast": 63.23,
+            "dis_fire_station": 0.34,
+            "dis_road": 7.57,
+            "dis_vegetation": 3.35,
+            "dis_water_reservoir": 12.6,
+            "flat_area": 57.9,
+            "floors_number": "6",
+            "footprint_area": 57.9,
+            "prefecture": "大阪府",
+            "roof_condition": "Good ",
+            "roof_material": "Concrete ",
+            "roof_type": "Flat",
+            "solar_panel_area": "0",
+            "sports_fields_area": "False",
+            "tree_height": 6,
+            "tree_overhang": "False"
+        }
+    ]
+}
+```
+
+
+=> Batch Location API
 ```json
 {
     "data": [
         {
-            "id": "13",
-            "lon": "135.474451",
-            "lat": "34.668775",
-            "solar_panel_area_b": "0",
-            "roof_type_b": "Flat",
-            "building_height_b": "60",
-            "number_of_floors_b": "13",
-            "footprint_area_b": "1912",
-            "air_conditioner_area_b": null,
-            "air_conditioner_count_b": "6",
-            "roof_condition_b": "Fair",
-            "roof_material_b": "Concrete ",
-            "dis_tree_b": "13.03",
-            "dis_vegetation_b": "4.22",
-            "sports_fields_p": "No",
-            "dis_closestbuilding_b ": "1.96",
-            "flat_area_b": "1912",
-            "tree_overhang_b": "0",
-            "tree_height_p": "4",
-            "dis_coast_b": "57.56",
-            "dis_firestation_b": "0.17",
-            "dis_water_reservoir_b": "6.73",
-            "dis_to_road _b": "18.53",
-            "ground_height_from_sea_lvl_b": "-1"
+            "confidence": 0.95,
+            "data": [
+                {
+                    "addr": "松原市天美東５丁目４−３３",
+                    "air_conditioner_area": 6.54,
+                    "air_conditioner_count": 5,
+                    "building_footprint_id": 0,
+                    "building_ground_height": 10,
+                    "building_height": "12",
+                    "centroid_lat": 34.5919896,
+                    "centroid_long": 135.5354218,
+                    "dis_closest_building": 4.6,
+                    "dis_closest_tree": 2.11,
+                    "dis_coast": 55.42,
+                    "dis_fire_station": 1.26,
+                    "dis_road": 6.18,
+                    "dis_vegetation": 1.68,
+                    "dis_water_reservoir": 10.43,
+                    "flat_area": 1019.0,
+                    "floors_number": "4",
+                    "footprint_area": 1019.0,
+                    "prefecture": "大阪府",
+                    "roof_condition": "Good ",
+                    "roof_material": "Concrete ",
+                    "roof_type": "Flat",
+                    "solar_panel_area": "0",
+                    "sports_fields_area": "False",
+                    "tree_height": 16,
+                    "tree_overhang": "False"
+                },
+                {
+                    "addr": "松原市天美東５丁目４−３３",
+                    "air_conditioner_area": 0.0,
+                    "air_conditioner_count": 0,
+                    "building_footprint_id": 0,
+                    "building_ground_height": 10,
+                    "building_height": "30",
+                    "centroid_lat": 34.5920989989664,
+                    "centroid_long": 135.535425913682,
+                    "dis_closest_building": 4.06,
+                    "dis_closest_tree": 11.26,
+                    "dis_coast": 55.43,
+                    "dis_fire_station": 1.25,
+                    "dis_road": 23.01,
+                    "dis_vegetation": 2.11,
+                    "dis_water_reservoir": 10.44,
+                    "flat_area": 674.0,
+                    "floors_number": "9",
+                    "footprint_area": 674.0,
+                    "prefecture": "大阪府",
+                    "roof_condition": "Fair",
+                    "roof_material": "Concrete ",
+                    "roof_type": "Flat",
+                    "solar_panel_area": "0",
+                    "sports_fields_area": "False",
+                    "tree_height": 16,
+                    "tree_overhang": "False"
+                }
+            ],
+            "correlationId": "123"
         },
         {
-            "id": "13",
-            "lon": "135.47402321643",
-            "lat": "34.6691330170861",
-            "solar_panel_area_b": "0",
-            "roof_type_b": "Flat",
-            "building_height_b": "15",
-            "number_of_floors_b": "4",
-            "footprint_area_b": "1802",
-            "air_conditioner_area_b": "0",
-            "air_conditioner_count_b": "0",
-            "roof_condition_b": "Fair",
-            "roof_material_b": "Concrete ",
-            "dis_tree_b": "5.37",
-            "dis_vegetation_b": "5.11",
-            "sports_fields_p": "No",
-            "dis_closestbuilding_b ": "1.94",
-            "flat_area_b": "1802",
-            "tree_overhang_b": "0",
-            "tree_height_p": "4",
-            "dis_coast_b": "57.57",
-            "dis_firestation_b": "0.15",
-            "dis_water_reservoir_b": "6.73",
-            "dis_to_road _b": "10.55",
-            "ground_height_from_sea_lvl_b": "-1"
+            "confidence": 0.95,
+            "data": [
+                {
+                    "addr": "大阪市中央区谷町２丁目５−４",
+                    "air_conditioner_area": 0.0,
+                    "air_conditioner_count": 27,
+                    "building_footprint_id": 23,
+                    "building_ground_height": 15,
+                    "building_height": "36",
+                    "centroid_lat": 34.6855071,
+                    "centroid_long": 135.5169481,
+                    "dis_closest_building": 0.85,
+                    "dis_closest_tree": 6.65,
+                    "dis_coast": 63.24,
+                    "dis_fire_station": 0.34,
+                    "dis_road": 7.86,
+                    "dis_vegetation": 4.21,
+                    "dis_water_reservoir": 12.5,
+                    "flat_area": 457.0,
+                    "floors_number": "10",
+                    "footprint_area": 457.0,
+                    "prefecture": "大阪府",
+                    "roof_condition": "Fair",
+                    "roof_material": "Concrete ",
+                    "roof_type": "Flat",
+                    "solar_panel_area": "0",
+                    "sports_fields_area": "False",
+                    "tree_height": 6,
+                    "tree_overhang": "False"
+                },
+                {
+                    "addr": "大阪市中央区糸屋町１丁目１−１",
+                    "air_conditioner_area": 0.0,
+                    "air_conditioner_count": 2,
+                    "building_footprint_id": 23,
+                    "building_ground_height": 15,
+                    "building_height": "18",
+                    "centroid_lat": 34.6855604972551,
+                    "centroid_long": 135.516783499364,
+                    "dis_closest_building": 0.85,
+                    "dis_closest_tree": 15.23,
+                    "dis_coast": 63.23,
+                    "dis_fire_station": 0.34,
+                    "dis_road": 7.57,
+                    "dis_vegetation": 3.35,
+                    "dis_water_reservoir": 12.6,
+                    "flat_area": 57.9,
+                    "floors_number": "6",
+                    "footprint_area": 57.9,
+                    "prefecture": "大阪府",
+                    "roof_condition": "Good ",
+                    "roof_material": "Concrete ",
+                    "roof_type": "Flat",
+                    "solar_panel_area": "0",
+                    "sports_fields_area": "False",
+                    "tree_height": 6,
+                    "tree_overhang": "False"
+                }
+            ],
+            "correlationId": "789"
         }
     ],
     "msg": "OK",
