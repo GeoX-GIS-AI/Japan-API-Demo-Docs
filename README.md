@@ -40,7 +40,7 @@ After downloading Postman follow the instructions below to get started.
 2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai.com/api/v1/japan/parcels
 3. Select the GET HTTP method
 4. Setup authorization as mentioned above.
-5. Now put your address and prefecture in the Params section with `address` (松原市天美東５丁目４−３３) and `prefecture` (大阪府) keys. Once updated your Request URL field should look like `https://api.geox-ai.com/api/v1/japan/parcels?prefecture=大阪&address=府大阪市西区九条南１丁目１２-２１`
+5. Now put your address and prefecture in the Params section with `address` (松原市天美東５丁目４−３３) and `prefecture` (大阪府) keys. Once updated your Request URL field should look like `https://api.geox-ai.com/api/v1/japan/parcels?prefecture=大阪府&address=松原市天美東５丁目４−３３`
 6. Finally, execute the API.
 
 => Batch Location API with POST method
