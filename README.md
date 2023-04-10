@@ -261,13 +261,13 @@ address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
             "floors_number": "10",
             "footprint_area": 457.0,
             "prefecture": "大阪府",
-            "roof_condition": "Fair",
-            "roof_material": "Concrete ",
-            "roof_type": "Flat",
+            "roof_condition": "fair",
+            "roof_material": "concrete ",
+            "roof_type": "flat",
             "solar_panel_area": "0",
-            "sports_fields_area": "False",
+            "sports_fields_area": "false",
             "tree_height": 6,
-            "tree_overhang": "False"
+            "tree_overhang": "false"
         },
         {
             "addr": "大阪市中央区糸屋町１丁目１−１",
@@ -289,13 +289,13 @@ address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
             "floors_number": "6",
             "footprint_area": 57.9,
             "prefecture": "大阪府",
-            "roof_condition": "Good ",
-            "roof_material": "Concrete ",
-            "roof_type": "Flat",
+            "roof_condition": "good ",
+            "roof_material": "concrete ",
+            "roof_type": "flat",
             "solar_panel_area": "0",
-            "sports_fields_area": "False",
+            "sports_fields_area": "false",
             "tree_height": 6,
-            "tree_overhang": "False"
+            "tree_overhang": "false"
         }
     ]
 }
@@ -329,13 +329,13 @@ address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
                     "floors_number": "4",
                     "footprint_area": 1019.0,
                     "prefecture": "大阪府",
-                    "roof_condition": "Good ",
-                    "roof_material": "Concrete ",
-                    "roof_type": "Flat",
+                    "roof_condition": "good ",
+                    "roof_material": "concrete ",
+                    "roof_type": "flat",
                     "solar_panel_area": "0",
-                    "sports_fields_area": "False",
+                    "sports_fields_area": "false",
                     "tree_height": 16,
-                    "tree_overhang": "False"
+                    "tree_overhang": "false"
                 },
                 {
                     "addr": "松原市天美東５丁目４−３３",
@@ -357,13 +357,13 @@ address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
                     "floors_number": "9",
                     "footprint_area": 674.0,
                     "prefecture": "大阪府",
-                    "roof_condition": "Fair",
-                    "roof_material": "Concrete ",
-                    "roof_type": "Flat",
+                    "roof_condition": "fair",
+                    "roof_material": "concrete ",
+                    "roof_type": "flat",
                     "solar_panel_area": "0",
-                    "sports_fields_area": "False",
+                    "sports_fields_area": "false",
                     "tree_height": 16,
-                    "tree_overhang": "False"
+                    "tree_overhang": "false"
                 }
             ],
             "correlationId": "123"
@@ -391,13 +391,13 @@ address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
                     "floors_number": "10",
                     "footprint_area": 457.0,
                     "prefecture": "大阪府",
-                    "roof_condition": "Fair",
-                    "roof_material": "Concrete ",
-                    "roof_type": "Flat",
+                    "roof_condition": "fair",
+                    "roof_material": "concrete ",
+                    "roof_type": "flat",
                     "solar_panel_area": "0",
-                    "sports_fields_area": "False",
+                    "sports_fields_area": "false",
                     "tree_height": 6,
-                    "tree_overhang": "False"
+                    "tree_overhang": "false"
                 },
                 {
                     "addr": "大阪市中央区糸屋町１丁目１−１",
@@ -419,13 +419,13 @@ address=大阪市中央区谷町２丁目５−４&prefecture=大阪府
                     "floors_number": "6",
                     "footprint_area": 57.9,
                     "prefecture": "大阪府",
-                    "roof_condition": "Good ",
-                    "roof_material": "Concrete ",
-                    "roof_type": "Flat",
+                    "roof_condition": "good ",
+                    "roof_material": "concrete ",
+                    "roof_type": "flat",
                     "solar_panel_area": "0",
-                    "sports_fields_area": "False",
+                    "sports_fields_area": "false",
                     "tree_height": 6,
-                    "tree_overhang": "False"
+                    "tree_overhang": "false"
                 }
             ],
             "correlationId": "789"
