@@ -284,7 +284,8 @@ address=大阪市中央区谷町２丁目５−４&prefecture=愛知県
     },
     "msg": 200,
     "status": "OK"
-}```
+}
+```
 
 
 => Batch Location API
@@ -382,4 +383,5 @@ address=大阪市中央区谷町２丁目５−４&prefecture=愛知県
     ],
     "msg": "OK",
     "status": 200
-}```
+}
+```
