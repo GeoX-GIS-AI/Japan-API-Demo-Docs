@@ -8,7 +8,7 @@ The API requires to be signed with Version 4 signing process of AWS. Here is how
 In the Authorization tab of Postman app, do the following:
 - For Type, choose AWS Signature.
 - For AccessKey and SecretKey, enter your IAM access key ID and secret access key.
-- For region, enter the ap-northeast-1.
+- For AWS Region, enter the region which is ap-northeast-1.
 
 ## Python
 We can install and use the AWS Requests Auth library from [here](https://pypi.org/project/aws-requests-auth/)
