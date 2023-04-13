@@ -8,6 +8,7 @@ The API requires to be signed with Version 4 signing process of AWS. Here is how
 In the Authorization tab of Postman app, do the following:
 - For Type, choose AWS Signature.
 - For AccessKey and SecretKey, enter your IAM access key ID and secret access key.
+- For region, enter the ap-northeast-1.
 
 ## Python
 We can install and use the AWS Requests Auth library from [here](https://pypi.org/project/aws-requests-auth/)
@@ -81,7 +82,7 @@ def request_single_location(access_key, secret_key, address, prefecture) -> dict
         'aws_access_key': access_key,
         'aws_secret_access_key': secret_key,
         'aws_host': "i3xmlwbhsb.execute-api.ap-northeast-1.amazonaws.com/prod",
-        'aws_region': "us-east-1",
+        'aws_region': "ap-northeast-1",
         'aws_service': "execute-api"
     }
     auth = AWSRequestsAuth(**aws_details)
@@ -100,7 +101,7 @@ def m2m_locations_batch(access_key, secret_key, locations):
         'aws_access_key': access_key,
         'aws_secret_access_key': secret_key,
         'aws_host': "i3xmlwbhsb.execute-api.ap-northeast-1.amazonaws.com/prod",
-        'aws_region': "us-east-1",
+        'aws_region': "ap-northeast-1",
         'aws_service': "execute-api"
     }
     auth = AWSRequestsAuth(**aws_details)
@@ -141,7 +142,7 @@ The API request needs to be signed with AWS Signature Version 4. Please follow t
 ```shell
 curl --location --request GET 'https://i3xmlwbhsb.execute-api.ap-northeast-1.amazonaws.com/prod/api/v1/japan/parcels?address=大阪市中央区谷町２丁目５−４&prefecture=愛知県' \
 --header 'X-Amz-Date: 20230409T093209Z' \
---header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXXXXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90bXXXXXXXXXXXXXXXXXXXXXXXXXX'
+--header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXXXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90bXXXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
 
 => Batch Location API with POST method
@@ -149,7 +150,7 @@ curl --location --request GET 'https://i3xmlwbhsb.execute-api.ap-northeast-1.ama
 curl --location --request POST 'https://i3xmlwbhsb.execute-api.ap-northeast-1.amazonaws.com/prod/api/v1/japan/parcels' \
 --header 'X-Amz-Content-Sha256: beaead3198f7da1e70d03ab969765e0821b24fc913697e929e726aeaebf0eba3' \
 --header 'X-Amz-Date: 20230409T094608Z' \
---header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc33192f8d7c9802b2e0df49XXXXXXXXXXXX' \
+--header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc33192f8d7c9802b2e0df49XXXXXXXXXXXX' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "locations": [
@@ -174,7 +175,7 @@ wget --no-check-certificate --quiet \
   --method GET \
   --timeout=0 \
   --header 'X-Amz-Date: 20230409T093209Z' \
-  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TIXXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90XXX' \
+  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TIXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90XXX' \
    'https://i3xmlwbhsb.execute-api.ap-northeast-1.amazonaws.com/prod/api/v1/japan/parcels?address=大阪市中央区谷町２丁目５−４&prefecture=愛知県'
 ```
 
@@ -185,7 +186,7 @@ wget --no-check-certificate --quiet \
   --timeout=0 \
   --header 'X-Amz-Content-Sha256: beaead3198f7da1e70d03ab969765e0821b24fc913697e929e726aeaebf0eba3' \
   --header 'X-Amz-Date: 20230409T094608Z' \
-  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2XXX/20230409/us-east-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc331XXX' \
+  --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2XXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc331XXX' \
   --header 'Content-Type: application/json' \
   --body-data '{
     "locations": [
