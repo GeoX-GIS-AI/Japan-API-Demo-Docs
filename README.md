@@ -41,7 +41,7 @@ After downloading Postman follow the instructions below to get started.
 2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
 3. Select the GET HTTP method
 4. Setup authorization as mentioned above.
-5. Now put your address and prefecture in the Params section with `address` (名古屋市中区栄3-16-1 本館1F) and `prefecture` (愛知県) keys. Once updated your Request URL field should look like `https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?prefecture=愛知県&address=名古屋市中区栄3-16-1 本館1F`
+5. Now put your address and prefecture in the Params section with `address` (大阪市中央区谷町２丁目５−４) and `prefecture` (愛知県) keys. Once updated your Request URL field should look like `https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー`
 6. Finally, execute the API.
 
 => Batch Location API with POST method
@@ -50,7 +50,7 @@ After downloading Postman follow the instructions below to get started.
 3. Select the POST HTTP method
 4. Setup authorization as mentioned above.
 5. Now go to the Body section, select the raw radio button and select JSON from the dropdown.
-6. Now put your address and prefecture in the Body section with `address` (名古屋市中区栄3-16-1 本館1F) and `prefecture` (愛知県) keys along with `correlationId` key.
+6. Now put your address and prefecture in the Body section with `address` (大阪市中央区谷町２丁目５−４) and `prefecture` (愛知県) keys along with `correlationId` key.
 7. You can add multiple locations in the body section.
 8. Finally, hit the API.
 
@@ -66,13 +66,17 @@ import requests
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 
-def request_single_location(access_key, secret_key, address, prefecture) -> dict:
+def request_single_location(access_key, secret_key, address, prefecture, occupation_type, 
+                            square_footage, business_name) -> dict:
     """
     This function will execute the API with location(address and prefecture) and return the response.
     :param access_key: AWS Access Key
     :param secret_key: AWS Secret Key
     :param address: address of the location
     :param prefecture: prefecture of the location
+    :param occupation_type: occupation type of the location
+    :param square_footage: square footage of the location
+    :param business_name: business name of the location
     :return: Response of the API
     """
     assert address and prefecture, "Both address and prefecture required."
@@ -88,7 +92,10 @@ def request_single_location(access_key, secret_key, address, prefecture) -> dict
     auth = AWSRequestsAuth(**aws_details)
     params = {
         "address": address,
-        "prefecture": prefecture
+        "prefecture": prefecture,
+        "occupation_type": occupation_type,
+        "square_footage": square_footage,
+        "business_name": business_name
     }
     res = requests.get(api_url, auth=auth, params=request_params)
     assert res.status_code == 200, f"Request failed with status: {res.status_code}"
@@ -117,19 +124,19 @@ def m2m_locations_batch(access_key, secret_key, locations):
 if __name__ == '__main__':
     # Calling single location API with address/prefecture
     m2m_response = request_single_location("YOUR_API_KEY", "YOUR_API_SECRET",
-                               address="名古屋市中区栄3-16-1 本館1F", prefecture="愛知県")
+                               address="大阪市中央区谷町２丁目５−４", prefecture="愛知県")
 
     # Calling batch location API
-    locations = [ # Each location object should contain address and prefecture along with correlationId
+    locations = [ # Each location object should contain address along with correlationId and optionally it can have prefecture, occupation_type, square_footage and business_name which affects the resulting confidence
         {
-            "address": "名古屋市中区栄3-16-1 本館1F",
-            "prefecture": "愛知県",
-            "correlationId": "123"
+            "address": "大阪市中央区高麗橋２丁目６−１０",
+            "prefecture": "大阪府",
+            "correlationId": "1"
         },
         {
-            "address": "大阪市中央区谷町２丁目５−４",
-            "prefecture": "愛知県",
-            "correlationId": "789"
+            "address": "大阪市中央区高麗橋２丁目６−９",
+            "prefecture": "大阪府",
+            "correlationId": "2"
         }
     ]
     m2m_response = m2m_locations_batch(access_key, secret_key, locations)
@@ -140,7 +147,7 @@ The API request needs to be signed with AWS Signature Version 4. Please follow t
 
 => Single Location API with GET method
 ```shell
-curl --location --request GET 'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大阪市中央区谷町２丁目５−４&prefecture=愛知県' \
+curl --location --request GET 'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー' \
 --header 'X-Amz-Date: 20230409T093209Z' \
 --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXXXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90bXXXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
@@ -155,14 +162,14 @@ curl --location --request POST 'https://api.geox-ai-japan-commercial-insights.co
 --data-raw '{
     "locations": [
         {
-            "address": "名古屋市中村区名駅2ー40-17",
-            "prefecture": "愛知県",
-            "correlationId": "123-aaa"
+            "address": "大阪市中央区高麗橋２丁目６−１０",
+            "prefecture": "大阪府",
+            "correlationId": "1"
         },
         {
-            "address": "名古屋市中区栄3-16-1 本館1F",
-            "prefecture": "愛知県",
-            "correlationId": "789bbb-66-ddd"
+            "address": "大阪市中央区高麗橋２丁目６−９",
+            "prefecture": "大阪府",
+            "correlationId": "2"
         }
     ]
 }'
@@ -176,7 +183,7 @@ wget --no-check-certificate --quiet \
   --timeout=0 \
   --header 'X-Amz-Date: 20230409T093209Z' \
   --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TIXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90XXX' \
-   'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大阪市中央区谷町２丁目５−４&prefecture=愛知県'
+   'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー'
 ```
 
 => Batch Location API with POST method
@@ -191,14 +198,14 @@ wget --no-check-certificate --quiet \
   --body-data '{
     "locations": [
         {
-            "address": "名古屋市中村区名駅2ー40-17",
-            "prefecture": "愛知県",
-            "correlationId": "123-aaa"
+            "address": "大阪市中央区高麗橋２丁目６−１０",
+            "prefecture": "大阪府",
+            "correlationId": "1"
         },
         {
-            "address": "名古屋市中区栄3-16-1 本館1F",
-            "prefecture": "愛知県",
-            "correlationId": "789bbb-66-ddd"
+            "address": "大阪市中央区高麗橋２丁目６−９",
+            "prefecture": "大阪府",
+            "correlationId": "2"
         }
     ]
 }' \
@@ -215,21 +222,21 @@ https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
 
 ## Request Query params Sample
 ```shell
-address=大阪市中央区谷町２丁目５−４&prefecture=愛知県
+address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー
 ```
 ## Request Body Sample (Batch Location API)
 ```json
 {
     "locations": [
         {
-            "address": "名古屋市中村区名駅2ー40-17",
-            "prefecture": "愛知県",
-            "correlationId": "123-aaa"
+            "address": "大阪市中央区高麗橋２丁目６−１０",
+            "prefecture": "大阪府",
+            "correlationId": "1"
         },
         {
-            "address": "名古屋市中区栄3-16-1 本館1F",
-            "prefecture": "愛知県",
-            "correlationId": "789bbb-66-ddd"
+            "address": "大阪市中央区高麗橋２丁目６−９",
+            "prefecture": "大阪府",
+            "correlationId": "2"
         }
     ]
 }
@@ -242,52 +249,61 @@ address=大阪市中央区谷町２丁目５−４&prefecture=愛知県
 {
     "data": {
         "parcel": {
-            "parcel_id": 44030992,
-            "region": "Kyūshū",
+            "parcel_id": 44030197,
+            "region": "Kyushu",
             "sports_fields_area": 0.0,
             "solar_panel_ground_area": 0.0,
             "solar_panel_buildings_area": 0.0,
-            "prefecture": "Ōita"
+            "prefecture": "Oita"
         },
         "buildings": [
             {
-                "footprint_id": 44030992000,
-                "addr": null,
-                "dis_vegetation": 10.67,
-                "region": "Kyūshū",
-                "air_conditioner_area": 0.0,
-                "building_volume": null,
-                "floors_number": null,
-                "flat_area": 0.0,
-                "roof_condition": null,
-                "lon": 132.07559265188345,
-                "tree_height": null,
-                "dis_fire_station": 10.99,
-                "building_ground_height": null,
+                "footprint_id": 44030197004000,
+                "addr": "大分県大分市王子西町14-14 この住所で正解です。以前の駄原の提案は間違いでした。",
+                "dis_vegetation": 0.0,
+                "region": "Kyushu",
+                "air_conditioner_area": 37.95,
+                "building_volume": 62464.32,
+                "floors_number": 3,
+                "flat_area": 6519.71,
+                "roof_condition": "fair",
+                "lon": 131.5899140179686,
+                "dis_fire_station": 0.32,
+                "building_ground_height": 5.0,
                 "solar_panel_area": 0.0,
-                "dis_road": 0.06,
+                "dis_road": 0.01,
                 "tree_overhang": 0.0,
-                "roof_material": null,
-                "building_height": null,
-                "gable_length": 36.79,
-                "air_conditioner_count": 0,
-                "footprint_area": 139.58,
-                "ridge_length": 17.67,
-                "roof_type": "gable",
-                "dis_closest_building": 2.05,
-                "dis_closest_tree": 0.0,
-                "dis_coast": -1.0,
-                "lat": 32.970632076177075,
-                "dis_water_reservoir": 13.49
+                "roof_material": "concrete",
+                "building_height": 29.0,
+                "gable_length": 0.0,
+                "air_conditioner_count": 5,
+                "footprint_area": 6940.48,
+                "ridge_length": 5.59,
+                "roof_type": "flat",
+                "dis_closest_building": 11.42,
+                "dis_closest_tree": 0.27,
+                "dis_coast": 0.64,
+                "lat": 33.239374672965816,
+                "dis_water_reservoir": 25.72,
+                "business_name": "豊の国情報ライブラリー",
+                "business_use": "Office",
+                "prior_roof_condition": null,
+                "prior_roof_condition_date": null,
+                "elevation_range": null,
+                "mountains_slope": "<1°",
+                "landform_analysis": "flat surface",
+                "landslide_type": null,
+                "landslide_warning_status": null,
+                "landslide_alert_level": null,
+                "main_building": true
             }
         ],
-        "confidence": 96
+        "confidence": 100
     },
-    "msg": 200,
-    "status": "OK"
+    "msg": "OK",
+    "status": 200
 }
 ```
-
 
 => Batch Location API
 ```json
@@ -295,91 +311,189 @@ address=大阪市中央区谷町２丁目５−４&prefecture=愛知県
     "data": [
         {
             "parcel": {
-                "parcel_id": 44030992,
-                "region": "Kyūshū",
+                "parcel_id": 27041552,
+                "region": "Kansai",
                 "sports_fields_area": 0.0,
                 "solar_panel_ground_area": 0.0,
                 "solar_panel_buildings_area": 0.0,
-                "prefecture": "Ōita"
+                "prefecture": "Osaka"
             },
             "buildings": [
                 {
-                    "footprint_id": 44030992000,
-                    "addr": null,
-                    "dis_vegetation": 10.67,
-                    "region": "Kyūshū",
+                    "footprint_id": 27041552006000,
+                    "addr": "大阪府大阪市中央区高麗橋2丁目6-10",
+                    "dis_vegetation": 5.32,
+                    "region": "Kansai",
                     "air_conditioner_area": 0.0,
-                    "building_volume": null,
-                    "floors_number": null,
-                    "flat_area": 0.0,
-                    "roof_condition": null,
-                    "lon": 132.07559265188345,
-                    "tree_height": null,
-                    "dis_fire_station": 10.99,
-                    "building_ground_height": null,
+                    "building_volume": 20579.52,
+                    "floors_number": 13,
+                    "flat_area": 454.28,
+                    "roof_condition": "bad",
+                    "lon": 135.50409928489512,
+                    "dis_fire_station": 0.92,
+                    "building_ground_height": 2.0,
                     "solar_panel_area": 0.0,
-                    "dis_road": 0.06,
+                    "dis_road": 0.01,
                     "tree_overhang": 0.0,
-                    "roof_material": null,
-                    "building_height": null,
-                    "gable_length": 36.79,
+                    "roof_material": "concrete",
+                    "building_height": 43.0,
+                    "gable_length": 0.0,
                     "air_conditioner_count": 0,
-                    "footprint_area": 139.58,
-                    "ridge_length": 17.67,
-                    "roof_type": "gable",
-                    "dis_closest_building": 2.05,
-                    "dis_closest_tree": 0.0,
-                    "dis_coast": -1.0,
-                    "lat": 32.970632076177075,
-                    "dis_water_reservoir": 13.49
+                    "footprint_area": 527.68,
+                    "ridge_length": 0.0,
+                    "roof_type": "flat",
+                    "dis_closest_building": 1.41,
+                    "dis_closest_tree": 30.52,
+                    "dis_coast": 6.95,
+                    "lat": 34.68956661051362,
+                    "dis_water_reservoir": 2.66,
+                    "business_name": "ブルーブックスカフェ大阪",
+                    "business_use": "Office",
+                    "prior_roof_condition": null,
+                    "prior_roof_condition_date": null,
+                    "elevation_range": "<300m",
+                    "mountains_slope": "<1°",
+                    "landform_analysis": "lowlands",
+                    "landslide_type": null,
+                    "landslide_warning_status": null,
+                    "landslide_alert_level": null,
+                    "main_building": true
+                },
+                {
+                    "footprint_id": 27041552006001,
+                    "addr": "大阪府大阪市中央区高麗橋2丁目6-10",
+                    "dis_vegetation": 27.26,
+                    "region": "Kansai",
+                    "air_conditioner_area": 0.0,
+                    "building_volume": 4360.95,
+                    "floors_number": 5,
+                    "flat_area": 236.9,
+                    "roof_condition": "fair",
+                    "lon": 135.50420503488303,
+                    "dis_fire_station": 0.91,
+                    "building_ground_height": 2.0,
+                    "solar_panel_area": 0.0,
+                    "dis_road": 0.0,
+                    "tree_overhang": 0.0,
+                    "roof_material": "concrete",
+                    "building_height": 17.0,
+                    "gable_length": 0.0,
+                    "air_conditioner_count": 0,
+                    "footprint_area": 290.73,
+                    "ridge_length": 0.0,
+                    "roof_type": "flat",
+                    "dis_closest_building": 1.41,
+                    "dis_closest_tree": 24.89,
+                    "dis_coast": 6.97,
+                    "lat": 34.68968321542212,
+                    "dis_water_reservoir": 2.66,
+                    "business_name": "山源ビル",
+                    "business_use": "Office",
+                    "prior_roof_condition": null,
+                    "prior_roof_condition_date": null,
+                    "elevation_range": "<300m",
+                    "mountains_slope": "<1°",
+                    "landform_analysis": "lowlands",
+                    "landslide_type": null,
+                    "landslide_warning_status": null,
+                    "landslide_alert_level": null
                 }
             ],
-            "confidence": 100,
-            "correlationId": "123-aaa"
+            "confidence": 85,
+            "correlationId": "1"
         },
         {
             "parcel": {
-                "parcel_id": 44030992,
-                "region": "Kyūshū",
+                "parcel_id": 27041552,
+                "region": "Kansai",
                 "sports_fields_area": 0.0,
                 "solar_panel_ground_area": 0.0,
                 "solar_panel_buildings_area": 0.0,
-                "prefecture": "Ōita"
+                "prefecture": "Osaka"
             },
             "buildings": [
                 {
-                    "footprint_id": 44030992000,
-                    "addr": null,
-                    "dis_vegetation": 10.67,
-                    "region": "Kyūshū",
+                    "footprint_id": 27041552006000,
+                    "addr": "大阪府大阪市中央区高麗橋2丁目6-9 山源産業ビル",
+                    "dis_vegetation": 5.32,
+                    "region": "Kansai",
                     "air_conditioner_area": 0.0,
-                    "building_volume": null,
-                    "floors_number": null,
-                    "flat_area": 0.0,
-                    "roof_condition": null,
-                    "lon": 132.07559265188345,
-                    "tree_height": null,
-                    "dis_fire_station": 10.99,
-                    "building_ground_height": null,
+                    "building_volume": 20579.52,
+                    "floors_number": 13,
+                    "flat_area": 454.28,
+                    "roof_condition": "bad",
+                    "lon": 135.50409928489512,
+                    "dis_fire_station": 0.92,
+                    "building_ground_height": 2.0,
                     "solar_panel_area": 0.0,
-                    "dis_road": 0.06,
+                    "dis_road": 0.01,
                     "tree_overhang": 0.0,
-                    "roof_material": null,
-                    "building_height": null,
-                    "gable_length": 36.79,
+                    "roof_material": "concrete",
+                    "building_height": 43.0,
+                    "gable_length": 0.0,
                     "air_conditioner_count": 0,
-                    "footprint_area": 139.58,
-                    "ridge_length": 17.67,
-                    "roof_type": "gable",
-                    "dis_closest_building": 2.05,
-                    "dis_closest_tree": 0.0,
-                    "dis_coast": -1.0,
-                    "lat": 32.970632076177075,
-                    "dis_water_reservoir": 13.49
+                    "footprint_area": 527.68,
+                    "ridge_length": 0.0,
+                    "roof_type": "flat",
+                    "dis_closest_building": 1.41,
+                    "dis_closest_tree": 30.52,
+                    "dis_coast": 6.95,
+                    "lat": 34.68956661051362,
+                    "dis_water_reservoir": 2.66,
+                    "business_name": "ブルーブックスカフェ大阪",
+                    "business_use": "Office",
+                    "prior_roof_condition": null,
+                    "prior_roof_condition_date": null,
+                    "elevation_range": "<300m",
+                    "mountains_slope": "<1°",
+                    "landform_analysis": "lowlands",
+                    "landslide_type": null,
+                    "landslide_warning_status": null,
+                    "landslide_alert_level": null
+                },
+                {
+                    "footprint_id": 27041552006001,
+                    "addr": "大阪府大阪市中央区高麗橋2丁目6-9 山源産業ビル",
+                    "dis_vegetation": 27.26,
+                    "region": "Kansai",
+                    "air_conditioner_area": 0.0,
+                    "building_volume": 4360.95,
+                    "floors_number": 5,
+                    "flat_area": 236.9,
+                    "roof_condition": "fair",
+                    "lon": 135.50420503488303,
+                    "dis_fire_station": 0.91,
+                    "building_ground_height": 2.0,
+                    "solar_panel_area": 0.0,
+                    "dis_road": 0.0,
+                    "tree_overhang": 0.0,
+                    "roof_material": "concrete",
+                    "building_height": 17.0,
+                    "gable_length": 0.0,
+                    "air_conditioner_count": 0,
+                    "footprint_area": 290.73,
+                    "ridge_length": 0.0,
+                    "roof_type": "flat",
+                    "dis_closest_building": 1.41,
+                    "dis_closest_tree": 24.89,
+                    "dis_coast": 6.97,
+                    "lat": 34.68968321542212,
+                    "dis_water_reservoir": 2.66,
+                    "business_name": "山源ビル",
+                    "business_use": "Office",
+                    "prior_roof_condition": null,
+                    "prior_roof_condition_date": null,
+                    "elevation_range": "<300m",
+                    "mountains_slope": "<1°",
+                    "landform_analysis": "lowlands",
+                    "landslide_type": null,
+                    "landslide_warning_status": null,
+                    "landslide_alert_level": null,
+                    "main_building": true
                 }
             ],
-            "confidence": 96,
-            "correlationId": "789bbb-66-ddd"
+            "confidence": 85,
+            "correlationId": "2"
         }
     ],
     "msg": "OK",
