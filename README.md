@@ -38,15 +38,15 @@ After downloading Postman follow the instructions below to get started.
 
 => Single Location API with GET method
 1. Create a new request.
-2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
+2. In the Request URL field, paste your API's invoke URL which is https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
 3. Select the GET HTTP method
 4. Setup authorization as mentioned above.
-5. Now put your address and prefecture in the Params section with `address` (大阪市中央区谷町２丁目５−４) and `prefecture` (愛知県) keys. Once updated your Request URL field should look like `https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー`
+5. Now put your address and prefecture in the Params section with `address` (大阪市中央区谷町２丁目５−４) and `prefecture` (愛知県) keys. Once updated your Request URL field should look like `https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー`
 6. Finally, execute the API.
 
 => Batch Location API with POST method
 1. Create a new request.
-2. In the Request URL field, paste your API's invoke URL which is https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
+2. In the Request URL field, paste your API's invoke URL which is https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
 3. Select the POST HTTP method
 4. Setup authorization as mentioned above.
 5. Now go to the Body section, select the raw radio button and select JSON from the dropdown.
@@ -81,7 +81,7 @@ def request_single_location(access_key, secret_key, address, prefecture, occupat
     """
     assert address and prefecture, "Both address and prefecture required."
     
-    api_url = "https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels"
+    api_url = "https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels"
     aws_details = {
         'aws_access_key': access_key,
         'aws_secret_access_key': secret_key,
@@ -103,7 +103,7 @@ def request_single_location(access_key, secret_key, address, prefecture, occupat
     return res_data
 
 def m2m_locations_batch(access_key, secret_key, locations):
-    api_url = "https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels"
+    api_url = "https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels"
     aws_details = {
         'aws_access_key': access_key,
         'aws_secret_access_key': secret_key,
@@ -147,14 +147,14 @@ The API request needs to be signed with AWS Signature Version 4. Please follow t
 
 => Single Location API with GET method
 ```shell
-curl --location --request GET 'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー' \
+curl --location --request GET 'https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー' \
 --header 'X-Amz-Date: 20230409T093209Z' \
 --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXXXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90bXXXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
 
 => Batch Location API with POST method
 ```shell
-curl --location --request POST 'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels' \
+curl --location --request POST 'https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels' \
 --header 'X-Amz-Content-Sha256: beaead3198f7da1e70d03ab969765e0821b24fc913697e929e726aeaebf0eba3' \
 --header 'X-Amz-Date: 20230409T094608Z' \
 --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TITFXXXXXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=74891c783cc33192f8d7c9802b2e0df49XXXXXXXXXXXX' \
@@ -183,7 +183,7 @@ wget --no-check-certificate --quiet \
   --timeout=0 \
   --header 'X-Amz-Date: 20230409T093209Z' \
   --header 'Authorization: AWS4-HMAC-SHA256 Credential=AKIA2TIXXX/20230409/ap-northeast-1/execute-api/aws4_request, SignedHeaders=host;x-amz-date, Signature=021611bd2dba2e3f90XXX' \
-   'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー'
+   'https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels?address=大分市王子西町１４-１&prefecture=大分県&occupation_type=事務所&square_footage=6900&business_name=豊の国情報ライブラリー'
 ```
 
 => Batch Location API with POST method
@@ -209,7 +209,7 @@ wget --no-check-certificate --quiet \
         }
     ]
 }' \
-   'https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels'
+   'https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels'
 ```
 
 # Request and Response Samples
@@ -217,7 +217,7 @@ Here are the sample request and response
 
 ## Request URL
 ```shell
-https://api.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
+https://restapihub.geox-ai-japan-commercial-insights.com/api/v1/japan/parcels
 ```
 
 ## Request Query params Sample
